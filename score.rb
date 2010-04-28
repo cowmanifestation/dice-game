@@ -27,25 +27,25 @@
 #
 # Your goal is to write the score method.
 
-def points(dice)
+def score(dice)
   n = 0
   (1..9).each do |i|
-    number_amount = dice.find_all{|d| d == i}.size
+    amount = dice.find_all{|d| d == i}.size
     case i
     when 1
-      if number_amount > 2
-        n += 1000 + (number_amount - 3) * 100
+      if amount > 2
+        n += 1000 + (amount - 3) * 100
       else
-        n += number_amount * 100
+        n += amount * 100
       end
     when 5
-      if number_amount > 2
-        n += 500 + (number_amount - 3) * 50
+      if amount > 2
+        n += 500 + (amount - 3) * 50
       else
-        n += number_amount * 50
+        n += amount * 50
       end
     else
-      if number_amount > 2
+      if amount > 2
         n += i * 100
       end
     end

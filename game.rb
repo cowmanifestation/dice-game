@@ -1,19 +1,20 @@
 require "dice_set"
-require "points"
 require "player"
-#maybe points.rb should be part of the GreedGame class and dice_set.rb should be part of the Player class
-
 
 class GreedGame
   NoPlayersError = Class.new(StandardError)
 
-  def initialize(*players)  
-    raise NoPlayersError if players.empty?
+  def initialize(players = raise(NoPlayersError), dice = DiceSet.new)
+    @dice = dice
+    @temp_score = 0
     @players = players.map { |p| Player.new(p) }
   end
 
   attr_reader :players
-
+  attr_accessor :dice
+  attr_accessor :temp_score 
+  
+  
   def player_names
     players.map {|p| p.name}
   end
@@ -22,40 +23,67 @@ class GreedGame
     players.map {|p| p.score}
   end
   
-  def score(player, dice)
-    if points(dice) == 0
-      print "Your turn is over."
+  def score(dice)
+    n = 0
+    (1..9).each do |i|
+      amount = dice.find_all{|d| d == i}.size
+      case i
+      when 1
+        if amount > 2
+          n += 1000 + (amount - 3) * 100
+        else
+          n += amount * 100
+        end
+      when 5
+        if amount > 2
+          n += 500 + (amount - 3) * 50
+        else
+          n += amount * 50
+        end
+      else
+        if amount > 2
+          n += i * 100
+        end
+      end
+    end
+  
+    return n
+  end
+  
+  def roll(n = 5)
+    result = @dice.roll(n)
+    if score(result) == 0
+      p result
       switch_turns
     else
-      player.score += points(dice)
+      return result
     end
   end
   
-  def roll
-    
-    player = players[0]
-    dice = player.roll(5)
-    if points(dice) == 0
-      print "No points.  Your turn is over!"
-      switch_turns
-    else
-      switch_turns
-      print "#{player.name} rolls: "
-      dice
+  def roll_again(dice = [])
+    dice.reverse.each do |die|
+      @dice.delete_at(die - 1)
     end
+    @temp_score += score(@dice)
+    self.roll(dice.size)
   end
   
-  def whose_turn?
-    players[0].name
+  def current_player
+    players.first.name
+  end
+  
+  def keep_points
+    players.first.score += score(@dice) + @temp_score
+    switch_turns
   end
   
   private
   
   def switch_turns
-    player = players.shift
-    players.push(player)
+    @temp_score = 0
+    players.push(players.shift)
   end
-  
+    
 end
 
 
