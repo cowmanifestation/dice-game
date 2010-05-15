@@ -6,6 +6,7 @@ class UnscoringDice
   
 end
 
+
 class SomeScoringDice
   attr_reader :values
   def roll(n)
@@ -35,10 +36,17 @@ end
 class AllScoringDice
   
   def roll(n)
-    [1,1,1,1,1]
+    @values = [1,1,1,1,1]
+  end
+
+  def find_all(&block)
+    @values.find_all(&block)
   end
   
 end
+
+
+
 
 class SomeScoringThenUnscoringDice
   

@@ -1,7 +1,7 @@
 require "player"
 require "test/unit"
 
-class AboutPlayer < Test::Unit::TestCase
+class PlayerTest < Test::Unit::TestCase
   def test_can_roll_dice
     p = Player.new("Pete")
     dice_roll = p.roll(15)

@@ -14,8 +14,8 @@ class GreedGameTest < Test::Unit::TestCase
     game = GreedGame.new(["Chenoa"])
     assert_equal ["Chenoa"], game.player_names
 
-    game2 = GreedGame.new(["Chenoa", "Rich"])
-    assert_equal %w[Chenoa Rich], game2.player_names
+    game2 = GreedGame.new(["Chenoa", "Rich", "Floyd"])
+    assert_equal %w[Chenoa Rich Floyd], game2.player_names
   end
   
   def test_players_start_game_with_score_of_zero
@@ -112,11 +112,35 @@ class GreedGameTest < Test::Unit::TestCase
   end
   
   def test_when_someones_score_goes_over_five_thousand_everyone_left_in_rotation_gets_one_more_turn
-    #This is so hard!
-    game = GreedGame.new(["Chenoa", "Ansel"])
+    game = GreedGame.new(["Chenoa", "Ansel"], AllScoringDice.new)
+    game.players.first.score = 4500
+
+    game.roll
+    game.keep_points
+
+=begin 
+    game.play do   
+      game.players.each do |p|
+        p.play_turn
+      end
+    end
+=end
+    game.roll
+    game.keep_points
+
+    assert_raises(GreedGame::EndOfGame) do
+      game.roll
+    end
   end
   
   def test_player_with_highest_score_at_end_wins
+    game = GreedGame.new(["Chenoa", "Ansel"], AllScoringDice.new)
+    game.players.first.score = 4500
+
+    game.roll
+    game.keep_points
+
+    game.roll
+    assert_equal "Chenoa Wins!", game.keep_points
   end
-    
 end

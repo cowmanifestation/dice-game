@@ -1,13 +1,23 @@
 require "dice_set"
-require "player"
+require "greed_player"
 
 class GreedGame
   NoPlayersError = Class.new(StandardError)
 
+
   def initialize(players = raise(NoPlayersError), dice = DiceSet.new)
     @dice = dice
     @temp_score = 0
-    @players = players.map { |p| Player.new(p) }
+    @players = players.map { |p| GreedPlayer.new(p) }
+    @last_player = players[-1]
+  end
+
+  def play
+    unless players.each {|p| p.score < 5000 }
+      players.each do |p|
+        player.play_turn
+      end
+    end
   end
 
   attr_reader :players
@@ -22,7 +32,7 @@ class GreedGame
   def player_scores
     players.map {|p| p.score}
   end
-  
+=begin  
   def score(dice)
     n = 0
     (1..9).each do |i|
@@ -46,10 +56,10 @@ class GreedGame
         end
       end
     end
-  
+
     return n
   end
-  
+
   def roll(n = 5)
     result = @dice.roll(n)
     if score(result) == 0
@@ -59,7 +69,9 @@ class GreedGame
       return result
     end
   end
-  
+ 
+
+
   def roll_again(dice = [])
     dice.reverse.each do |die|
       @dice.delete_at(die - 1)
@@ -67,16 +79,25 @@ class GreedGame
     @temp_score += score(@dice)
     self.roll(dice.size)
   end
-  
+=end  
   def current_player
     players.first.name
   end
-  
+=begin  
   def keep_points
     players.first.score += score(@dice) + @temp_score
-    switch_turns
+    if players.first.score >= 5000
+      "#{players.first} Wins!"
+      # end_of_game 
+    else
+      switch_turns
+    end
   end
-  
+=end  
+  def end_of_game
+    #everyone through @last_player gets one more turn. 
+  end
+
   private
   
   def switch_turns
