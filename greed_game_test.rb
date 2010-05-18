@@ -18,6 +18,7 @@ class GreedGameTest < Test::Unit::TestCase
     assert_equal %w[Chenoa Rich Floyd], game2.player_names
   end
   
+=begin
   def test_players_start_game_with_score_of_zero
     game = GreedGame.new(["Chenoa", "Rich"])
     assert_equal [0,0], game.player_scores
@@ -28,7 +29,7 @@ class GreedGameTest < Test::Unit::TestCase
     dice = game.roll
     assert_equal 5, dice.size
   end
-  
+=end  
   def test_first_player_has_first_turn
     game = GreedGame.new(["Chenoa", "Rich", "Floyd", "Cinderella"])
     assert_equal "Chenoa", game.current_player
@@ -45,7 +46,7 @@ class GreedGameTest < Test::Unit::TestCase
     game.roll
     assert_equal "Cinderella", game.current_player
   end
-  
+
   def test_roll_of_zero_points_ends_turn_with_no_addition_to_score
     game = GreedGame.new(["Chenoa", "Rich"], UnscoringDice.new)
     player = game.current_player
@@ -54,7 +55,7 @@ class GreedGameTest < Test::Unit::TestCase
     assert_not_equal game.current_player, player
     assert_equal 0, game.players.last.score
   end
-  
+=begin  
   def test_player_can_roll_unscoring_dice_again
     game = GreedGame.new(["Chenoa", "Rich"], SomeScoringDice.new)
     player = game.current_player
@@ -110,7 +111,7 @@ class GreedGameTest < Test::Unit::TestCase
 
   def test_leaving_unscoring_dice_when_rolling_again_raises_error
   end
-  
+=end 
   def test_when_someones_score_goes_over_five_thousand_everyone_left_in_rotation_gets_one_more_turn
     game = GreedGame.new(["Chenoa", "Ansel"], AllScoringDice.new)
     game.players.first.score = 4500

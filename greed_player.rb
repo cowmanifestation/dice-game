@@ -1,13 +1,15 @@
-require "player"
+class GreedPlayer
 
-class GreedPlayer < Player
-
-  def initialize(name)
-    super
+  def initialize
+    @score = 0
+    #@name = name
     @temp_score = 0
   end
 
-  def score(dice)
+  attr_reader :name
+  attr_accessor :score, :temp_score
+
+  def roll_score(dice)
     n = 0
     (1..9).each do |i|
       amount = dice.find_all{|d| d == i}.size
@@ -36,7 +38,7 @@ class GreedPlayer < Player
  
   def roll_dice(dice, number_of_dice=5)
     dice_roll = dice.roll(number_of_dice)
-    if score(dice_roll) == 0
+    if roll_score(dice_roll) == 0
       p dice_roll
       #end_turn
     else
@@ -48,13 +50,13 @@ class GreedPlayer < Player
     dice_to_roll_again.reverse.each do |die|
       dice.delete_at(die - 1)
     end
-    @temp_score += score(dice)
+    @temp_score += roll_score(dice)
     roll_dice(dice, dice_to_roll_again.size)
   end
  
 
-  def keep_points
-    @score += score(@dice) + @temp_score
+  def keep_points(dice)
+    @score += roll_score(dice) + @temp_score
     end_turn
   end
 
@@ -68,7 +70,7 @@ class GreedPlayer < Player
   def play_turn(dice)
     dice_roll = roll_dice(dice)
     unless roll_dice == "End of Turn!"
-      
+      roll_again(dice_to_roll_again)
     end
   end
 =end
