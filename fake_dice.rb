@@ -15,7 +15,7 @@ class SomeScoringDice
     elsif n == 3
       @values = [1,2,3]
     else
-      #@values = (1..n).map { rand(6) + 1 }
+      @values = (1..n).map { rand(6) + 1 }
     end
   end
   

@@ -1,4 +1,5 @@
 class GreedPlayer
+  MustRollAllUnscoringDiceAgainError = Class.new(StandardError)
 
   def initialize
     @score = 0
@@ -39,19 +40,35 @@ class GreedPlayer
   def roll_dice(dice, number_of_dice=5)
     dice_roll = dice.roll(number_of_dice)
     if roll_score(dice_roll) == 0
-      p dice_roll
-      #end_turn
+      # end turn
+      return dice_roll
     else
       return dice_roll
     end
   end
 
-  def roll_again(dice, dice_to_roll_again = [])
-    dice_to_roll_again.reverse.each do |die|
-      dice.delete_at(die - 1)
+  def roll_again(dice, indexes_for_second_roll = [])
+    dice_to_roll_again = []
+    indexes_for_second_roll.each do |i|
+      dice_to_roll_again << dice[i - 1]
     end
-    @temp_score += roll_score(dice)
-    roll_dice(dice, dice_to_roll_again.size)
+    [2,3,4].each do |i|
+      if    dice.values.find_all {|n| n == i }.size < 3 && 
+            dice.values.find_all {|n| n == i}.size !=
+            dice_to_roll_again.find_all {|n| n == i}.size
+        raise MustRollAllUnscoringDiceAgainError
+      elsif dice.values.find_all {|n| n == i}.size > 3 &&
+            dice.values.find_all {|n| n == i}.size - 3 !=
+            dice_to_roll_again.find_all {|n| n == i}.size
+        raise MustRollAllUnscoringDiceAgainError
+      else
+        dice_to_roll_again.reverse.each do |die|
+          dice.values.delete_at(die - 1)
+        end
+        @temp_score += roll_score(dice)
+        roll_dice(dice, dice_to_roll_again.size)
+      end
+    end
   end
  
 

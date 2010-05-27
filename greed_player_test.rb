@@ -49,8 +49,8 @@ class GreedPlayerTest < Test::Unit::TestCase
     geronimo = GreedPlayer.new
     dice = SomeScoringDice.new
     geronimo.roll_dice(dice)
-    assert_raises MustRollAllUnscoringDiceAgainError do
-      geronimo.roll_again([2,3])
+    assert_raises GreedPlayer::MustRollAllUnscoringDiceAgainError do
+      geronimo.roll_again(dice, [2,3])
     end
   end
 
