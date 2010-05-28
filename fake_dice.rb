@@ -33,6 +33,21 @@ class SomeScoringDice
   
 end
 
+class SameNumberDice
+  attr_reader :values
+  def roll(n)
+    if n == 5
+      @values = [2,2,2,2,2]
+    else
+      @values = (1..n).map { rand(6) + 1 }
+    end
+  end
+
+  def [](n)
+    @values[n]
+  end
+end
+
 class AllScoringDice
   
   def roll(n)
@@ -44,9 +59,6 @@ class AllScoringDice
   end
   
 end
-
-
-
 
 class SomeScoringThenUnscoringDice
   

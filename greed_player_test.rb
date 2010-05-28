@@ -54,13 +54,22 @@ class GreedPlayerTest < Test::Unit::TestCase
     end
   end
 
-  def test_dice_not_selected_to_roll_again_are_added_to_temp_score
+  def test_dice_not_selected_for_second_roll_are_added_to_temp_score
+    daisy = GreedPlayer.new
+    dice = SomeScoringDice.new
+    daisy.roll_dice(dice)
+    daisy.roll_again(dice, [2,3,4])
+
+    assert_equal 150, daisy.temp_score
   end
 
   def test_after_turn_ends_temp_score_is_reset_to_zero
-  end
+    duke = GreedPlayer.new
+    dice = SomeScoringDice.new
+    duke.roll_dice(dice)
+    duke.keep_points(dice)
 
-  def test_when_player_rolls_again_dice_not_rolled_are_added_to_temp_score
+    assert_equal 0, duke.temp_score
   end
 
 end

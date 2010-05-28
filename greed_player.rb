@@ -47,30 +47,35 @@ class GreedPlayer
     end
   end
 
+  def authenticate_second_roll(dice, dice_to_roll_again)
+    [2,3,4].each do |i|
+      first_roll_n = dice.values.find_all {|n| n == i }.size
+      second_roll_n = dice_to_roll_again.find_all {|n| n == i}.size
+
+      if first_roll_n < 3      
+        unless first_roll_n == second_roll_n
+          raise MustRollAllUnscoringDiceAgainError
+        end
+      elsif first_roll_n > 3
+        unless first_roll_n - 3 == second_roll_n
+          raise MustRollAllUnscoringDiceAgainError
+        end
+      end
+    end
+  end
+
   def roll_again(dice, indexes_for_second_roll = [])
     dice_to_roll_again = []
     indexes_for_second_roll.each do |i|
       dice_to_roll_again << dice[i - 1]
     end
-    [2,3,4].each do |i|
-      if    dice.values.find_all {|n| n == i }.size < 3 && 
-            dice.values.find_all {|n| n == i}.size !=
-            dice_to_roll_again.find_all {|n| n == i}.size
-        raise MustRollAllUnscoringDiceAgainError
-      elsif dice.values.find_all {|n| n == i}.size > 3 &&
-            dice.values.find_all {|n| n == i}.size - 3 !=
-            dice_to_roll_again.find_all {|n| n == i}.size
-        raise MustRollAllUnscoringDiceAgainError
-      else
-        dice_to_roll_again.reverse.each do |die|
-          dice.values.delete_at(die - 1)
-        end
-        @temp_score += roll_score(dice)
-        roll_dice(dice, dice_to_roll_again.size)
-      end
+    authenticate_second_roll(dice, dice_to_roll_again)
+    indexes_for_second_roll.reverse.each do |die|
+      dice.values.delete_at(die - 1)
     end
+    @temp_score += roll_score(dice)
+    return dice.roll(dice_to_roll_again.size)
   end
- 
 
   def keep_points(dice)
     @score += roll_score(dice) + @temp_score
