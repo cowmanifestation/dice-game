@@ -40,8 +40,8 @@ class GreedPlayer
   def roll_dice(dice, number_of_dice=5)
     dice_roll = dice.roll(number_of_dice)
     if roll_score(dice_roll) == 0
-      # end turn
-      return dice_roll
+      "You rolled #{dice_roll}. #{end_turn}"
+      #return dice_roll
     else
       return dice_roll
     end
@@ -74,7 +74,7 @@ class GreedPlayer
       dice.values.delete_at(die - 1)
     end
     @temp_score += roll_score(dice)
-    return dice.roll(dice_to_roll_again.size)
+    return roll_dice(dice, dice_to_roll_again.size)
   end
 
   def keep_points(dice)

@@ -26,6 +26,9 @@ class GreedGame
   # is there a way to use the variables to which player instances are assigned and capitalize them to create names?  
   #def player_names
   #  players.map {|p| p.name}
+  #  
+  #  do we need player names anyway?
+  #
   #end
   
   def player_scores
@@ -38,6 +41,8 @@ class GreedGame
  
   def end_of_game
     #everyone through @last_player gets one more turn. 
+    #when @last_player gets end_of_turn message
+    #end_of_game!
   end
 
   private
